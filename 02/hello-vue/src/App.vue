@@ -2,10 +2,11 @@
 import { ref } from "vue";
 
 const name = ref("田中太郎")
+const greeting = ref("こんにちは")
 </script>
 
 <template>
-  <h1>こんにちは!{{name}}さん!</h1>
+  <h1>{{ greeting }}!{{name}}さん!</h1>
 </template>
 
 <style scoped>

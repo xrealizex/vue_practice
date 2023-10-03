@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { computed, ref, shallowReactive } from "vue";
+import { ref } from "vue";
 
-const number = ref(80)
-const showOrNot = computed(
-  (): boolean => {
-    let showOrNot = false
-    const rand = Math.round(Math.random() * 100)
-    if(rand >= 50) {
-      showOrNot = true
-    }
-    return showOrNot
-  }
-)
+const cocktailListInit: string[] = ["ホワイトレディ", "ブルーハワイ", "ニューヨーク"]
+const cocktailList = ref(cocktailListInit)
 </script>
 
 <template>
-  <p v-if="number >= 50">あ</p>
-  <p v-if="Math.round(Math.random() * 100) >= 50">い</p>
-  <p v-if="showOrNot">う</p>
+  <ul>
+    <li v-for="cocktailName in cocktailList" v-bind:key="cocktailName">
+      {{ cocktailName }}
+    </li>
+  </ul>
+  <ul>
+    <li v-for="(cocktailName, index) in cocktailList" v-bind:key="cocktailName">
+      {{ cocktailName }}(インデックス{{ index }})
+    </li>
+  </ul>
 </template>

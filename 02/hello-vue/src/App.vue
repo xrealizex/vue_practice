@@ -1,19 +1,49 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-const cocktailListInit: string[] = ["ホワイトレディ", "ブルーハワイ", "ニューヨーク"]
-const cocktailList = ref(cocktailListInit)
+const cocktailNo = ref(1)
+const priceMsg = ref("")
+
+watch(cocktailNo,
+  (newVal: number, oldVal: number): void => {
+    let msg = "前のカクテル: "
+    msg += getCocktailInfo(oldVal)
+    msg += "現在のカクテル: "
+    msg += getCocktailInfo(newVal)
+    priceMsg.value = msg
+  }
+)
+
+setInterval(
+  (): void => {
+    cocktailNo.value = Math.round(Math.random() * 3) + 1
+  },
+  1000
+)
+
+interface Cocktail {
+  id: number;
+  name: string;
+  price: number;
+}
+
+function getCocktailInfo(cocktailNo: number): string {
+  const cocktailDataListInit = new Map<number, Cocktail>()
+  cocktailDataListInit.set(1, {id: 1, name: "ホワイトレディ", price: 1200})
+  cocktailDataListInit.set(2, {id: 2, name: "ブルーハワイ", price: 1500})
+  cocktailDataListInit.set(3, {id: 3, name: "ニューヨーク", price: 1100})
+  cocktailDataListInit.set(4, {id: 4, name: "マティーニ", price: 1500})
+
+  const cocktail = cocktailDataListInit.get(cocktailNo)
+  let msg = "該当するカクテルはありません。"
+  if (cocktail != undefined) {
+    msg = `該当するカクテルは${cocktail.name}で、価格は${cocktail.price}円です。`
+  }
+  return msg;
+}
 </script>
 
 <template>
-  <ul>
-    <li v-for="cocktailName in cocktailList" v-bind:key="cocktailName">
-      {{ cocktailName }}
-    </li>
-  </ul>
-  <ul>
-    <li v-for="(cocktailName, index) in cocktailList" v-bind:key="cocktailName">
-      {{ cocktailName }}(インデックス{{ index }})
-    </li>
-  </ul>
+  <p>現在のカクテル番号: {{cocktailNo}}</p>
+	<p>{{priceMsg}}</p>
 </template>

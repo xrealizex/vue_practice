@@ -1,45 +1,43 @@
-<script setup lang="ts">
-import { ref, watch } from "vue";
+<script lang="ts">
+import { computed, defineComponent ,ref, watch } from "vue";
 
-const cocktailNo = ref(1)
-const priceMsg = ref("")
-
-watch(cocktailNo,
-  (newVal: number, oldVal: number): void => {
-    let msg = "前のカクテル: "
-    msg += getCocktailInfo(oldVal)
-    msg += "現在のカクテル: "
-    msg += getCocktailInfo(newVal)
-    priceMsg.value = msg
-  }
-)
-
-setInterval(
-  (): void => {
-    cocktailNo.value = Math.round(Math.random() * 3) + 1
-  },
-  1000
-)
-
-interface Cocktail {
-  id: number;
-  name: string;
-  price: number;
-}
-
-function getCocktailInfo(cocktailNo: number): string {
-  const cocktailDataListInit = new Map<number, Cocktail>()
+export default defineComponent({
+  name: "App",
+  setup() {
+    const cocktailDataListInit = new Map<number, Cocktail>()
   cocktailDataListInit.set(1, {id: 1, name: "ホワイトレディ", price: 1200})
   cocktailDataListInit.set(2, {id: 2, name: "ブルーハワイ", price: 1500})
   cocktailDataListInit.set(3, {id: 3, name: "ニューヨーク", price: 1100})
   cocktailDataListInit.set(4, {id: 4, name: "マティーニ", price: 1500})
 
-  const cocktail = cocktailDataListInit.get(cocktailNo)
-  let msg = "該当するカクテルはありません。"
-  if (cocktail != undefined) {
-    msg = `該当するカクテルは${cocktail.name}で、価格は${cocktail.price}円です。`
+  const cocktailNo = ref(1)
+  const priceMsg =computed(
+    ():string => {
+      const cocktail = cocktailDataListInit.get(cocktailNo.value)
+      let msg = "該当するカクテルはありません。"
+      if (cocktail != undefined) {
+        msg = `該当するカクテルは${cocktail.name}で、価格は${cocktail.price}円です。`
+      }
+      return msg;
+    }
+  )
+  setInterval(
+    (): void => {
+    cocktailNo.value = Math.round(Math.random() * 3) + 1
+  },
+  1000
+  )
+  return {
+    cocktailNo,
+    priceMsg
   }
-  return msg;
+  }
+})
+
+interface Cocktail {
+  id: number;
+  name: string;
+  price: number;
 }
 </script>
 
